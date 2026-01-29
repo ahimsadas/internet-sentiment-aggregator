@@ -1,36 +1,154 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Internet Sentiment Aggregator
+
+A web application that aggregates and analyzes online sentiment on any topic, providing evidence-backed stance distributions with visualizations.
+
+## Features
+
+- **Web Search Analysis**: Searches the web for diverse opinions and perspectives
+- **LLM-Powered Analysis**: Uses AI to identify opinion clusters and classify stances
+- **Stance Classification**: Categorizes content as supporting, opposing, mixed, or unclear
+- **Evidence-backed Results**: All claims are backed by actual excerpts and source URLs
+- **Interactive Visualizations**: Stance distribution charts and cluster exploration
+- **Transparent Methodology**: Shows sampling statistics, confidence scores, and limitations
+
+## Tech Stack
+
+- **Frontend**: Next.js 14+ (App Router), React, Tailwind CSS, shadcn/ui, Recharts
+- **Backend**: Next.js API routes, TypeScript
+- **Database**: SQLite (via better-sqlite3) for caching
+- **LLM & Web Search**: OpenRouter (xiaomi/mimo-v2-flash + web search plugin)
+
+## How It Works
+
+The application uses a simple 3-step pipeline:
+
+1. **Search Phrase Generation**: An LLM generates diverse search phrases from your topic
+2. **Web Search**: OpenRouter's web search plugin searches the web and retrieves content
+3. **Analysis**: An LLM analyzes the content and returns structured results
+
+This approach is simple, fast, and produces high-quality results.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm or yarn
+- API keys (see Environment Variables below)
+
+### Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Clone the repository
+git clone <repository-url>
+cd internet-sentiment-aggregator
+
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env.local
+
+# Edit .env.local with your API keys
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Copy `.env.example` to `.env.local` and fill in your API keys:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# Required
+OPENROUTER_API_KEY=your_key_here      # Get from https://openrouter.ai/keys
+```
 
-## Learn More
+### Running the Application
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+# Development mode
+npm run dev
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Production build
+npm run build
+npm start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) to access the application.
 
-## Deploy on Vercel
+### Running Tests
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# Run all tests
+npm test
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Run tests in watch mode
+npm run test:watch
+```
+
+## API Endpoints
+
+### POST /api/analyze
+
+Trigger a sentiment analysis for a topic.
+
+**Request Body:**
+```json
+{
+  "topic": "AI regulation",
+  "timeframe": "last_week",
+  "geo_scope": "global"
+}
+```
+
+**Response:** Full analysis output with clusters, stance distribution, and evidence.
+
+### GET /api/status/:id
+
+Get the status of an analysis by ID (for background processing).
+
+### GET /api/health
+
+Health check endpoint showing service status.
+
+## Manual Testing Checklist
+
+1. **Start the dev server:**
+   ```bash
+   npm run dev
+   ```
+
+2. **Test basic analysis:**
+   - Open http://localhost:3000
+   - Enter topic: "artificial intelligence regulation"
+   - Click "Analyze Sentiment"
+   - Verify loading state appears
+
+3. **Verify results display:**
+   - [ ] Stance distribution chart renders
+   - [ ] Opinion clusters are listed
+   - [ ] Each cluster has evidence links
+   - [ ] Limitations panel is visible
+
+4. **Test cluster exploration:**
+   - [ ] Click on a cluster to expand
+   - [ ] Verify evidence excerpts are shown
+   - [ ] Click evidence links - they should open in new tab
+
+## Limitations
+
+- **Coverage**: Only analyzes publicly accessible online content
+- **Social Media**: Twitter/X, Facebook, and Instagram are not available due to API restrictions
+- **Language**: Primarily optimized for English content
+- **Accuracy**: Results should be interpreted as indicative, not definitive
+- **Representativeness**: Online discourse may not reflect general population views
+
+## Architecture
+
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed technical documentation.
+
+## License
+
+MIT
+
+## Contributing
+
+Contributions are welcome. Please open an issue first to discuss proposed changes.

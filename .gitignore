@@ -31,7 +31,13 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+.env.local
+
+# SQLite database
+*.db
+*.sqlite
+*.sqlite3
+data/
 
 # vercel
 .vercel
